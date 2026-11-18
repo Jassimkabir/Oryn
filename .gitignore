@@ -1,0 +1,23 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.env
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json
+
+# impeccable runtime
+.impeccable/questions/
+.impeccable/review/
+.env*
+!.env.example
+
+# local Claude settings and installed skills (restore from skills-lock.json)
+.claude/settings.local.json
+.claude/skills/

@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-11-18T07:02:47.535Z",
+        "reason": "user confirmed: user chose Geist for the UI in chat; recorded in PRODUCT.md Brand Commitments"
+      }
+    ]
+  }
+}

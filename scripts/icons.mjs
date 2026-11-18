@@ -45,7 +45,18 @@ function oklchHex(value) {
 const PALETTES = [...css.matchAll(/\[data-theme="dark"\]\[data-palette="(\w+)"\]/g)].map((m) => m[1]);
 function tokens(palette, mode) {
 	const t = { ...block(`[data-theme="${mode}"]`), ...block(`[data-theme="${mode}"][data-palette="${palette}"]`) };
-	return { ground: oklchHex(t.sheet), groundHi: oklchHex(t.sheet), metal: oklchHex(t.stamp) };
+	const ground = oklchHex(t.sheet);
+	// The app's ambient light: each tint mixed half and half with the sheet (--glow: 50%).
+	return {
+		ground,
+		glowA: mix(oklchHex(t["tint-a"]), ground, 0.5),
+		glowB: mix(oklchHex(t["tint-b"]), ground, 0.5),
+		metal: oklchHex(t.stamp),
+	};
+}
+function mix(a, b, w) {
+	const c = (h, i) => Number.parseInt(h.slice(i, i + 2), 16);
+	return `#${[1, 3, 5].map((i) => Math.round(c(a, i) * w + c(b, i) * (1 - w)).toString(16).padStart(2, "0")).join("")}`;
 }
 
 /* ── the mark in a theme's metal ── */
@@ -73,16 +84,30 @@ const renderMark = (svg, width) =>
 		.png()
 		.toBuffer();
 
-const tile = (size, { groundHi, ground }) =>
+// The theme's sheet with its ambient glow in two corners, as behind the app's glass.
+const tile = (size, { ground, glowA, glowB }) =>
 	Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
-	<defs><radialGradient id="g" cx="30%" cy="22%" r="95%">
-		<stop offset="0" stop-color="${groundHi}"/><stop offset="1" stop-color="${ground}"/>
-	</radialGradient></defs>
-	<rect width="${size}" height="${size}" fill="url(#g)"/></svg>`);
+	<defs>
+		<radialGradient id="a" cx="0" cy="0" r="1.05" gradientUnits="objectBoundingBox">
+			<stop offset="0" stop-color="${glowA}"/><stop offset="1" stop-color="${glowA}" stop-opacity="0"/>
+		</radialGradient>
+		<radialGradient id="b" cx="1" cy="1" r="1.05" gradientUnits="objectBoundingBox">
+			<stop offset="0" stop-color="${glowB}"/><stop offset="1" stop-color="${glowB}" stop-opacity="0"/>
+		</radialGradient>
+	</defs>
+	<rect width="${size}" height="${size}" fill="${ground}"/>
+	<rect width="${size}" height="${size}" fill="url(#a)"/>
+	<rect width="${size}" height="${size}" fill="url(#b)"/></svg>`);
 
 async function appIcon(file, size, scale, svg, colours) {
 	const mark = await renderMark(svg, Math.round(size * scale));
-	await sharp(tile(size, colours)).composite([{ input: mark, gravity: "center" }]).png().toFile(file);
+	// Flattened, no alpha: iOS fills any transparency with black.
+	await sharp(tile(size, colours))
+		.composite([{ input: mark, gravity: "center" }])
+		.flatten({ background: colours.ground })
+		.removeAlpha()
+		.png()
+		.toFile(file);
 }
 async function favicon(file, size, svg) {
 	const pad = Math.max(1, Math.round(size * 0.04));
@@ -110,14 +135,16 @@ for (const palette of PALETTES) {
 	console.log(palette);
 }
 
-// Install defaults (manifest, first paint): the brand's own mint on deep teal.
-const mint = tokens("mint", "dark");
-const mintSvg = await themedMark(null);
-await appIcon("public/apple-touch-icon.png", 180, 0.62, mintSvg, mint);
-await appIcon("public/icon-192.png", 192, 0.62, mintSvg, mint);
-await appIcon("public/icon-512.png", 512, 0.62, mintSvg, mint);
-await appIcon("public/icon-maskable-512.png", 512, 0.5, mintSvg, mint); // inside the safe zone
-await favicon("public/favicon-32.png", 32, mintSvg);
-await favicon("public/favicon-64.png", 64, mintSvg);
-await writeFile("public/favicon.svg", mintSvg);
-console.log("defaults (mint)");
+// Install defaults (manifest, first paint) follow the app's default theme.
+const prefsSrc = await readFile("src/lib/prefs.ts", "utf8");
+const DEFAULT = prefsSrc.match(/DEFAULT_PREFS[^{]*{[^}]*?palette:s*"(w+)"/)?.[1] ?? "original";
+const base = tokens(DEFAULT, "dark");
+const baseSvg = await themedMark(DEFAULT === "mint" ? null : base.metal);
+await appIcon("public/apple-touch-icon.png", 180, 0.62, baseSvg, base);
+await appIcon("public/icon-192.png", 192, 0.62, baseSvg, base);
+await appIcon("public/icon-512.png", 512, 0.62, baseSvg, base);
+await appIcon("public/icon-maskable-512.png", 512, 0.5, baseSvg, base); // inside the safe zone
+await favicon("public/favicon-32.png", 32, baseSvg);
+await favicon("public/favicon-64.png", 64, baseSvg);
+await writeFile("public/favicon.svg", baseSvg);
+console.log(`defaults (${DEFAULT})`);

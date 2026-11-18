@@ -66,6 +66,9 @@
 	--bar-h: 2.75rem;
 	--safe-top: env(safe-area-inset-top, 0px);
 	--safe-bottom: env(safe-area-inset-bottom, 0px);
+	/* The floating tab bar sits partly inside the home-indicator area, just clear
+	   of the indicator, as the system bars do; 10px from the edge without one. */
+	--tabbar-bottom: max(0.625rem, calc(var(--safe-bottom) - 0.875rem));
 	color-scheme: light dark;
 }
 

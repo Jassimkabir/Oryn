@@ -70,7 +70,7 @@ export function Screen({
 					<div />
 				</div>
 			</header>
-			<main className="mx-auto w-full max-w-[480px] px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+2.5rem)]">
+			<main className="mx-auto w-full max-w-[480px] px-4 pb-[calc(var(--tabbar-h)+var(--tabbar-bottom)+2.5rem)]">
 				<div className="flex items-end justify-between gap-3 px-1 pt-1">
 					<div className="flex min-w-0 items-center gap-2.5">
 						{leading}

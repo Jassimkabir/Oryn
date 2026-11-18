@@ -29,7 +29,7 @@ export function TabBar({ onAdd }: { onAdd: () => void }) {
 	return (
 		<nav
 			aria-label="Main"
-			className="pointer-events-none fixed inset-x-0 bottom-0 z-30 pb-[calc(var(--safe-bottom)+0.625rem)]"
+			className="pointer-events-none fixed inset-x-0 bottom-0 z-30 pb-[var(--tabbar-bottom)]"
 		>
 			<div className="mx-auto flex max-w-[480px] items-center gap-2.5 px-4">
 				<div className="glass glass-thick liquid pointer-events-auto grid h-[var(--tabbar-h)] flex-1 grid-cols-4 rounded-full p-1">

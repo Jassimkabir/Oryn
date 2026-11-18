@@ -1,0 +1,553 @@
+@import "@fontsource-variable/geist/wght.css";
+@import "@fontsource-variable/geist-mono/wght.css";
+@import "tailwindcss";
+
+/* ───────────────────────────── Oryn · Glass ─────────────────────────────
+   Each theme is a soft light: an ambient wash of two hues behind frosted glass.
+   Cards, the floating tab bar and sheets are glass; the page behind them is the
+   theme's ambient light. The stamp ink (each theme's accent) has one job: the add
+   action and the active state. Mode lives on html[data-theme], theme on
+   html[data-palette]; change both only through setPrefs. */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+/* Hover only where a real pointer exists: phones never get sticky hover. */
+@custom-variant hover {
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			@slot;
+		}
+	}
+}
+
+@theme inline {
+	--font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+	--color-sheet: var(--sheet);
+	--color-raised: var(--raised);
+	--color-sunk: var(--sunk);
+	--color-rule: var(--rule);
+	--color-ink: var(--ink);
+	--color-muted: var(--muted);
+	--color-stamp: var(--stamp);
+	--color-on-stamp: var(--on-stamp);
+	--color-negative: var(--negative);
+	--color-positive: var(--positive);
+	--color-well: var(--well);
+
+	--text-2xs: 0.6875rem;
+	--text-2xs--line-height: 1.3;
+	--text-xs: 0.75rem;
+	--text-xs--line-height: 1.35;
+	--text-sm: 0.8125rem;
+	--text-sm--line-height: 1.4;
+	--text-base: 0.9375rem;
+	--text-base--line-height: 1.45;
+	--text-lg: 1.0625rem;
+	--text-lg--line-height: 1.35;
+	--text-title: 2.125rem;
+	--text-title--line-height: 1.1;
+
+	--radius-card: 1.5rem;
+	--radius-row: 1rem;
+	--radius-sheet: 2rem;
+
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+	/* How strongly the theme glow shows behind the glass. */
+	--glow: 50%;
+	--blur: 22px;
+	--blur-thick: 34px;
+	--sat: 1.8;
+	--tabbar-h: 4rem;
+	--bar-h: 2.75rem;
+	--safe-top: env(safe-area-inset-top, 0px);
+	--safe-bottom: env(safe-area-inset-bottom, 0px);
+	color-scheme: light dark;
+}
+
+/* ── Light ───────────────────────────────────────────────────── */
+[data-theme="light"] {
+	color-scheme: light;
+	--ink: oklch(0.22 0.03 270);
+	--muted: oklch(0.45 0.03 270);
+	--negative: oklch(0.52 0.19 25);
+	--positive: oklch(0.5 0.12 155);
+	--on-stamp: oklch(0.99 0.005 270);
+	--rule: oklch(0.3 0.03 270 / 0.1);
+	--well: oklch(0.3 0.03 270 / 0.07);
+
+	--glass: oklch(1 0 0 / 0.44);
+	--glass-thick: oklch(0.995 0.004 270 / 0.8);
+	--glass-line: oklch(1 0 0 / 0.75);
+	--glass-edge: oklch(1 0 0 / 0.9);
+	--glass-shadow: 0 1px 2px oklch(0.3 0.04 270 / 0.05),
+		0 14px 34px -14px oklch(0.3 0.06 270 / 0.22);
+	--lift: 0 8px 22px -6px color-mix(in oklch, var(--stamp) 55%, transparent);
+
+	/* Category colours for charts: one lightness, spread hues. */
+	--c-green: oklch(0.62 0.13 155);
+	--c-orange: oklch(0.64 0.15 40);
+	--c-blue: oklch(0.6 0.13 250);
+	--c-violet: oklch(0.6 0.15 300);
+	--c-pink: oklch(0.63 0.16 350);
+	--c-teal: oklch(0.62 0.11 200);
+	--c-amber: oklch(0.66 0.13 85);
+	--c-slate: oklch(0.52 0.06 270);
+	--c-red: oklch(0.58 0.17 25);
+	--c-lime: oklch(0.6 0.14 125);
+}
+[data-theme="light"][data-palette="original"] {
+	--sheet: oklch(0.965 0.012 285);
+	--tint-a: oklch(0.8 0.13 295);
+	--tint-b: oklch(0.84 0.11 225);
+	--stamp: oklch(0.47 0.18 292);
+}
+[data-theme="light"][data-palette="pink"] {
+	--sheet: oklch(0.965 0.018 350);
+	--tint-a: oklch(0.8 0.12 350);
+	--tint-b: oklch(0.84 0.10 45);
+	--stamp: oklch(0.47 0.17 350);
+}
+[data-theme="light"][data-palette="canary"] {
+	--sheet: oklch(0.97 0.03 95);
+	--tint-a: oklch(0.91 0.14 98);
+	--tint-b: oklch(0.84 0.11 150);
+	--stamp: oklch(0.46 0.11 152);
+}
+[data-theme="light"][data-palette="green"] {
+	--sheet: oklch(0.965 0.02 155);
+	--tint-a: oklch(0.8 0.12 155);
+	--tint-b: oklch(0.84 0.10 300);
+	--stamp: oklch(0.46 0.16 300);
+}
+[data-theme="light"][data-palette="sky"] {
+	--sheet: oklch(0.965 0.016 235);
+	--tint-a: oklch(0.8 0.11 235);
+	--tint-b: oklch(0.84 0.09 185);
+	--stamp: oklch(0.45 0.11 215);
+}
+[data-theme="light"][data-palette="mint"] {
+	--sheet: oklch(0.965 0.02 170);
+	--tint-a: oklch(0.8 0.11 168);
+	--tint-b: oklch(0.84 0.09 205);
+	--stamp: oklch(0.44 0.08 190);
+}
+
+/* ── Dark ────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+	color-scheme: dark;
+	--ink: oklch(0.96 0.008 270);
+	--muted: oklch(0.78 0.02 270);
+	--negative: oklch(0.76 0.14 25);
+	--positive: oklch(0.8 0.12 155);
+	--on-stamp: oklch(0.18 0.03 270);
+	--rule: oklch(1 0 0 / 0.1);
+	--well: oklch(1 0 0 / 0.08);
+
+	--glass: oklch(0.3 0.025 270 / 0.34);
+	--glass-thick: oklch(0.24 0.025 270 / 0.82);
+	--glass-line: oklch(1 0 0 / 0.1);
+	--glass-edge: oklch(1 0 0 / 0.16);
+	--glass-shadow: 0 1px 2px oklch(0 0 0 / 0.2),
+		0 16px 36px -14px oklch(0 0 0 / 0.55);
+	--lift: 0 8px 24px -6px color-mix(in oklch, var(--stamp) 45%, transparent);
+
+	--c-green: oklch(0.76 0.13 155);
+	--c-orange: oklch(0.76 0.14 45);
+	--c-blue: oklch(0.74 0.12 250);
+	--c-violet: oklch(0.74 0.13 300);
+	--c-pink: oklch(0.75 0.14 350);
+	--c-teal: oklch(0.78 0.1 200);
+	--c-amber: oklch(0.82 0.12 90);
+	--c-slate: oklch(0.7 0.04 270);
+	--c-red: oklch(0.74 0.14 25);
+	--c-lime: oklch(0.8 0.14 125);
+}
+[data-theme="dark"][data-palette="original"] {
+	--sheet: oklch(0.18 0.03 280);
+	--tint-a: oklch(0.42 0.17 295);
+	--tint-b: oklch(0.38 0.12 235);
+	--stamp: oklch(0.8 0.12 292);
+}
+[data-theme="dark"][data-palette="pink"] {
+	--sheet: oklch(0.18 0.03 345);
+	--tint-a: oklch(0.42 0.16 350);
+	--tint-b: oklch(0.38 0.11 40);
+	--stamp: oklch(0.82 0.11 350);
+}
+[data-theme="dark"][data-palette="canary"] {
+	--sheet: oklch(0.18 0.025 100);
+	--tint-a: oklch(0.42 0.11 95);
+	--tint-b: oklch(0.38 0.11 150);
+	--stamp: oklch(0.84 0.13 150);
+}
+[data-theme="dark"][data-palette="green"] {
+	--sheet: oklch(0.18 0.03 160);
+	--tint-a: oklch(0.42 0.12 155);
+	--tint-b: oklch(0.38 0.14 300);
+	--stamp: oklch(0.82 0.11 300);
+}
+[data-theme="dark"][data-palette="sky"] {
+	--sheet: oklch(0.18 0.03 240);
+	--tint-a: oklch(0.42 0.13 240);
+	--tint-b: oklch(0.38 0.10 190);
+	--stamp: oklch(0.84 0.1 205);
+}
+[data-theme="dark"][data-palette="mint"] {
+	--sheet: oklch(0.18 0.03 185);
+	--tint-a: oklch(0.42 0.11 168);
+	--tint-b: oklch(0.38 0.10 210);
+	--stamp: oklch(0.88 0.1 165);
+}
+/* Pure black: true black ground, glow kept faint. */
+[data-theme="dark"][data-amoled="true"] {
+	--sheet: oklch(0 0 0);
+	--tint-a: oklch(0.24 0.08 280);
+	--tint-b: oklch(0.2 0.05 230);
+}
+
+/* Glass level (Appearance, Glass). Clear lets more light through; Solid turns
+   the blur off entirely. */
+[data-glass="clear"] {
+	--blur: 12px;
+	--blur-thick: 20px;
+	--sat: 2;
+}
+[data-theme="light"][data-glass="clear"] {
+	--glass: oklch(1 0 0 / 0.26);
+	--glass-thick: oklch(0.995 0.004 270 / 0.62);
+}
+[data-theme="dark"][data-glass="clear"] {
+	--glass: oklch(0.3 0.025 270 / 0.2);
+	--glass-thick: oklch(0.24 0.025 270 / 0.66);
+}
+[data-glass="solid"] {
+	--blur: 0px;
+	--blur-thick: 0px;
+	--sat: 1;
+	--glass: var(--raised);
+	--glass-thick: var(--raised);
+}
+/* Glow off: the ambient light goes, the plain sheet stays. */
+[data-glow="false"] .ambient {
+	background: var(--sheet);
+}
+
+/* Solid stand-ins used by the icon builder and status bar. */
+[data-theme] {
+	--raised: color-mix(in oklch, var(--sheet) 70%, white);
+	--sunk: color-mix(in oklch, var(--sheet) 92%, black);
+}
+[data-theme="dark"] {
+	--raised: color-mix(in oklch, var(--sheet) 85%, white);
+	--sunk: color-mix(in oklch, var(--sheet) 80%, black);
+}
+
+/* Pure black: the bars, sheets and cards turn black glass too, so nothing reads
+   navy against the black ground. Placed after the glass levels so it wins. */
+[data-theme="dark"][data-amoled="true"] {
+	--glass: oklch(0.13 0 0 / 0.55);
+	--glass-thick: oklch(0.05 0 0 / 0.86);
+	--glass-line: oklch(1 0 0 / 0.09);
+	--glass-edge: oklch(1 0 0 / 0.1);
+	--raised: oklch(0.11 0 0);
+	--sunk: oklch(0 0 0);
+	--well: oklch(1 0 0 / 0.07);
+	--glass-shadow: 0 1px 2px oklch(0 0 0 / 0.4);
+}
+[data-theme="dark"][data-amoled="true"][data-glass="clear"] {
+	--glass: oklch(0.13 0 0 / 0.34);
+	--glass-thick: oklch(0.05 0 0 / 0.72);
+}
+[data-theme="dark"][data-amoled="true"][data-glass="solid"] {
+	--glass: oklch(0.11 0 0);
+	--glass-thick: oklch(0.06 0 0);
+}
+
+@media (prefers-contrast: more) {
+	[data-theme="light"] {
+		--rule: oklch(0.3 0.03 270 / 0.3);
+		--muted: oklch(0.36 0.03 270);
+		--glass: oklch(1 0 0 / 0.86);
+	}
+	[data-theme="dark"] {
+		--rule: oklch(1 0 0 / 0.3);
+		--muted: oklch(0.88 0.01 270);
+		--glass: oklch(0.22 0.02 270 / 0.9);
+	}
+}
+
+/* ── Mobile-native baseline ─────────────────────────────────── */
+html {
+	-webkit-tap-highlight-color: transparent;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	overscroll-behavior: none;
+	background: var(--sheet);
+	font-size: calc(100% * var(--text-scale, 1));
+}
+body {
+	min-height: 100dvh;
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	color: var(--ink);
+	background: transparent;
+	font-variant-numeric: tabular-nums lining-nums;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+button,
+a,
+[role="button"],
+label {
+	touch-action: manipulation;
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-touch-callout: none;
+}
+input,
+textarea,
+select {
+	font-size: max(16px, 1rem);
+}
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+}
+p {
+	text-wrap: pretty;
+}
+::selection {
+	background: color-mix(in oklch, var(--stamp) 28%, transparent);
+	color: var(--ink);
+}
+::placeholder {
+	color: var(--muted);
+	opacity: 1;
+}
+* {
+	caret-color: var(--stamp);
+	scrollbar-color: var(--rule) transparent;
+	scrollbar-width: thin;
+}
+/* In the base layer so a control can restyle its own focus with utilities. */
+@layer base {
+	:focus-visible {
+		outline: 2px solid var(--stamp);
+		outline-offset: 2px;
+		border-radius: 8px;
+	}
+}
+
+/* The theme's ambient light, fixed behind everything. Static: never animated. */
+.ambient {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	--glow-a: color-mix(in oklch, var(--tint-a) var(--glow), var(--sheet));
+	--glow-b: color-mix(in oklch, var(--tint-b) var(--glow), var(--sheet));
+	background:
+		radial-gradient(85% 38% at 0% 0%, var(--glow-a), transparent 78%),
+		radial-gradient(75% 36% at 100% 22%, var(--glow-b), transparent 78%),
+		radial-gradient(85% 36% at 0% 62%, var(--glow-b), transparent 78%),
+		radial-gradient(80% 40% at 100% 100%, var(--glow-a), transparent 78%),
+		var(--sheet);
+}
+
+/* Component layer: utilities (fixed, rounded-*, bg-*) override these. */
+@layer components {
+	/* ── Glass ───────────────────────────────────────────────────── */
+	/* Frosted glass over the ambient light. Never nest glass inside glass, never
+	   animate the blur itself. */
+	.glass {
+		background: var(--glass);
+		-webkit-backdrop-filter: blur(var(--blur)) saturate(var(--sat));
+		backdrop-filter: blur(var(--blur)) saturate(var(--sat));
+		border: 1px solid var(--glass-line);
+		box-shadow:
+			inset 0 1px 0 var(--glass-edge),
+			var(--glass-shadow);
+	}
+	.glass-thick {
+		background: var(--glass-thick);
+		-webkit-backdrop-filter: blur(var(--blur-thick)) saturate(var(--sat));
+		backdrop-filter: blur(var(--blur-thick)) saturate(var(--sat));
+	}
+	/* Liquid glass: a brighter rim and a soft specular sheen across the top. */
+	.liquid {
+		position: relative;
+		isolation: isolate;
+	}
+	.liquid::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		z-index: -1;
+		pointer-events: none;
+		background: linear-gradient(
+			180deg,
+			oklch(1 0 0 / 0.28),
+			oklch(1 0 0 / 0) 48%,
+			oklch(1 0 0 / 0.06)
+		);
+	}
+	[data-theme="dark"] .liquid::before {
+		background: linear-gradient(
+			180deg,
+			oklch(1 0 0 / 0.1),
+			oklch(1 0 0 / 0) 48%,
+			oklch(1 0 0 / 0.03)
+		);
+	}
+	.card {
+		border-radius: var(--radius-card);
+	}
+	@media (prefers-reduced-transparency: reduce) {
+		.glass,
+		.glass-thick {
+			-webkit-backdrop-filter: none;
+			backdrop-filter: none;
+			background: var(--raised);
+		}
+	}
+}
+
+@layer components {
+	/* The primary action: stamp ink with a soft sheen. */
+	.btn-stamp {
+		background:
+			linear-gradient(180deg, oklch(1 0 0 / 0.22), oklch(1 0 0 / 0) 55%),
+			var(--stamp);
+		color: var(--on-stamp);
+		box-shadow:
+			inset 0 1px 0 oklch(1 0 0 / 0.35),
+			var(--lift);
+	}
+
+	/* A sideways scroller whose ends fade instead of cutting off. */
+	.scroll-fade {
+		mask-image: linear-gradient(
+			90deg,
+			transparent,
+			#000 1.25rem,
+			#000 calc(100% - 1.75rem),
+			transparent
+		);
+	}
+}
+
+/* The month figure: Geist light at display size. */
+.figure {
+	font-weight: 300;
+	letter-spacing: -0.045em;
+	line-height: 1;
+	font-variant-numeric: tabular-nums lining-nums;
+}
+.figure-currency {
+	font-weight: 400;
+	font-size: 0.42em;
+	vertical-align: 0.95em;
+	margin-right: 0.08em;
+	letter-spacing: 0;
+	color: var(--muted);
+}
+.num {
+	font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Press feedback: pointer-down, ease-out. */
+.pressable {
+	transition: transform 160ms var(--ease-out);
+}
+.pressable:active {
+	transform: scale(0.96);
+}
+
+/* A just-saved row glows with the stamp ink, then settles. */
+@keyframes fresh-glow {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+[data-fresh="true"] {
+	position: relative;
+}
+[data-fresh="true"]::after {
+	content: "";
+	position: absolute;
+	inset: 0 -0.75rem;
+	border-radius: 0.875rem;
+	background: color-mix(in oklch, var(--stamp) 14%, transparent);
+	pointer-events: none;
+	animation: fresh-glow 2.4s 0.4s var(--ease-out) both;
+}
+
+/* A category's detail opens in place. */
+@keyframes detail-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+}
+.detail-in {
+	animation: detail-in 220ms var(--ease-out) both;
+}
+
+/* The header's glass fades in (opacity only) once the large title scrolls away. */
+.bar-glass,
+.bar-title {
+	opacity: 0;
+	transition: opacity 180ms var(--ease-out);
+}
+[data-collapsed="true"] .bar-glass,
+[data-collapsed="true"] .bar-title {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.pressable:active {
+		transform: none;
+		opacity: 0.75;
+	}
+	.detail-in,
+	[data-fresh="true"]::after {
+		animation: none;
+	}
+	[data-fresh="true"]::after {
+		opacity: 0;
+	}
+}
+[data-reduce-motion="true"] .pressable:active {
+	transform: none;
+	opacity: 0.75;
+}
+[data-reduce-motion="true"] .detail-in,
+[data-reduce-motion="true"] [data-fresh="true"]::after {
+	animation: none;
+}
+[data-reduce-motion="true"] [data-fresh="true"]::after {
+	opacity: 0;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+/* Privacy mode: static blur on amounts (never animated). */
+[data-privacy="true"] .privacy-blur {
+	filter: blur(0.45em);
+	-webkit-user-select: none;
+	user-select: none;
+}
